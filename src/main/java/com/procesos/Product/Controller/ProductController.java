@@ -52,7 +52,7 @@ public class ProductController {
         response.put("message","Hubo un error al crear el Producto");
         return new ResponseEntity(response,HttpStatus.BAD_REQUEST);
     }
-    @PutMapping(value = "/producto/{id}")
+    @PutMapping(value = "/product/{id}")
 
     public ResponseEntity updateProduct(@PathVariable Long id, @RequestBody Product product){
         Map response = new HashMap();
