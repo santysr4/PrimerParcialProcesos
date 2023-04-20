@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.Map;
 
+@RestController
 public class ProductController {
 
     @Autowired
@@ -28,7 +29,7 @@ public class ProductController {
         }
     }
     @GetMapping(value = "/product")
-    public ResponseEntity findAllProducto(){
+    public ResponseEntity findAllProduct(){
         Map response = new HashMap();
         try {
             return new ResponseEntity(productServiceImp.allProduct(), HttpStatus.OK);
