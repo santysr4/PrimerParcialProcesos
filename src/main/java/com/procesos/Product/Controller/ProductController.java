@@ -68,4 +68,7 @@ public class ProductController {
         response.put("message","Hubo un error al actualizar el vehiculo");
         return new ResponseEntity(response,HttpStatus.BAD_REQUEST);
     }
+
+    public static class UserController {
+    }
 }
