@@ -40,16 +40,31 @@ public class UserServiceImp implements UserService{
     public Boolean UpdateUser(Long id, User user) {
         try {
             User userBD = userRepository.findById(id).get();
+
             userBD.setFirstName(user.getFirstName());
             userBD.setLastName(user.getLastName());
-            userBD.setBirthday(user.getBirthday());
+            userBD.setEmail(user.getEmail());
             userBD.setAddress(user.getAddress());
+            userBD.setBirthday(userBD.getBirthday());
+            userBD.setPassword(user.getPassword());
             User userUp = userRepository.save(userBD);
             return true;
         }catch (Exception e){
             return false;
         }
     }
+    @Override
+    public Boolean delete(Long id){
+        try {
+            User user = userRepository.findById(id).get();
+            userRepository.delete(user);
+            return true;
+        }catch (Exception e){
+            return false;
+        }
+    }
+
+
 
     @Override
     public String login(User user) {

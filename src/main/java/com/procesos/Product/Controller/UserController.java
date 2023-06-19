@@ -57,6 +57,34 @@ public class UserController {
             return new ResponseEntity<>(apiResponse,HttpStatus.NOT_FOUND);
         }
     }
+    @PutMapping(value = "/{id}")
+    public ResponseEntity updateUser(@PathVariable Long id, @RequestBody User user) {
+
+        Boolean userDB = userService.UpdateUser(id, user);
+        try {
+            if (userDB == null) {
+                apiResponse = new ApiResponse(Constants.REGISTER_NOT_FOUND,"");
+                return new ResponseEntity(apiResponse, HttpStatus.BAD_REQUEST);
+            }
+            apiResponse = new ApiResponse(Constants.REGISTER_UPDATED, userService.getUser(id));
+            return new ResponseEntity(apiResponse, HttpStatus.ACCEPTED);
+        } catch (Exception e) {
+            apiResponse = new ApiResponse(Constants.REGISTER_BAD,user);
+            return new ResponseEntity(apiResponse, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @DeleteMapping(value="/{id}")
+    public ResponseEntity deleteUser(@PathVariable Long id) {
+        try {
+            apiResponse = new ApiResponse(Constants.REGISTER_FOUND, (userService.delete(id)));
+            return new ResponseEntity(apiResponse, HttpStatus.OK);
+        } catch (Exception e) {
+            apiResponse = new ApiResponse(Constants.REGISTER_NOT_FOUND, "");
+            return new ResponseEntity(apiResponse, HttpStatus.NOT_FOUND);
+        }
+
+    }
 
 
 }

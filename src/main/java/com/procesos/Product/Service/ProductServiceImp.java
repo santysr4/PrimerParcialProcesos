@@ -60,5 +60,15 @@ public class ProductServiceImp implements ProductService{
             return false;
         }
     }
+    @Override
+    public Boolean delete(Long id){
+        try {
+            Product product = productrepository.findById(id).get();
+            productrepository.delete(product);
+            return true;
+        }catch (Exception e){
+            return false;
+        }
+    }
 
 }

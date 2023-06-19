@@ -9,4 +9,5 @@ public interface ProductService {
     List<Product> allProduct();
     Boolean createProduct();
     Boolean updateProduct(Long id, Product product);
+    Boolean delete(Long id);
 }

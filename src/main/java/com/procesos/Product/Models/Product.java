@@ -20,4 +20,7 @@ public class Product {
     private String Categoria;
     @Column(name = "imagen")
     private String Imagen;
+    @ManyToOne
+    @JoinColumn(name="user_id", nullable=false)
+    private User user;
 }

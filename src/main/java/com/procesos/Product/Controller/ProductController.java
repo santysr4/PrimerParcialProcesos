@@ -91,5 +91,19 @@ public class ProductController {
         return new ResponseEntity(response,HttpStatus.BAD_REQUEST);
     }
 
+    @DeleteMapping(value = "/product/{id}")
+    public ResponseEntity deleteproduct(@PathVariable Long id, @RequestHeader(value = "Authorization") String token){
+        Map response = new HashMap();
+        try {
+            if(!validateToken(token)){
+                return new ResponseEntity("Token invalido", HttpStatus.UNAUTHORIZED);
+            }
+            return new ResponseEntity(productServiceImp.delete(id), HttpStatus.OK);
+        }catch(Exception e){
+            response.put("status","404");
+            response.put("message","No se encontro el producto!");
+            return new ResponseEntity<>(response,HttpStatus.NOT_FOUND);
+        }
+    }
 
 }
