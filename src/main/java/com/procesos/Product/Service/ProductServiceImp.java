@@ -1,7 +1,12 @@
 package com.procesos.Product.Service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.procesos.Product.Models.Product;
 import com.procesos.Product.Repository.ProductRepository;
+import com.procesos.Product.Repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -13,6 +18,10 @@ public class ProductServiceImp implements ProductService{
 
     private final RestTemplate restTemplate;
     private ProductRepository productrepository;
+    @Autowired
+    private UserRepository userRepository;
+    @Autowired
+    private UserService userService;
 
     public ProductServiceImp(RestTemplate restTemplate, ProductRepository productrepository) {
         this.restTemplate = restTemplate;
@@ -32,19 +41,25 @@ public class ProductServiceImp implements ProductService{
         return productrepository.findAll();
     }
 
-    @Override
-    public Boolean createProduct() {
 
-        try {
-            String url="https://6441aadb76540ce2257c3dfc.mockapi.io/product";
-            Product[] response= restTemplate.getForObject(url, Product[].class);
-            productrepository.saveAll(Arrays.asList(response));
+    @Override
+    public Boolean createProduct(Long id, Long id_user)throws JsonProcessingException {
+        String urlApi = "https://6441aadb76540ce2257c3dfc.mockapi.io/product/"+id;
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity<String> producto = restTemplate.getForEntity(urlApi, String.class);
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        Product product = objectMapper.readValue(producto.getBody(), Product.class);
+        System.out.println(product.getPrecio());
+        if(productrepository.findById(id).isEmpty() && !userRepository.findById(id_user).isEmpty()){
+            product.setUser(userService.getUser(id_user));
+            productrepository.save(product);
             return true;
-        }catch (Exception e){
-            System.out.println(e);
-            return false;
         }
+        return false;
     }
+
+
     @Override
     public Boolean updateProduct(Long id, Product product) {
         try {

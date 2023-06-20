@@ -4,6 +4,7 @@ import com.procesos.Product.Models.User;
 import com.procesos.Product.Repository.UserRepository;
 import com.procesos.Product.Utils.JWTUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,7 +16,8 @@ public class UserServiceImp implements UserService{
     private UserRepository userRepository;
     @Autowired
     private JWTUtil jwtUtil;
-
+    @Autowired
+    private PasswordEncoder passwordEncoder;
     public User getUser(Long id){
         return userRepository.findById(id).get();
     }
@@ -23,6 +25,7 @@ public class UserServiceImp implements UserService{
     @Override
     public Boolean createUser(User user) {
         try {
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
             userRepository.save(user);
             return true;
         }catch (Exception e){
@@ -53,6 +56,7 @@ public class UserServiceImp implements UserService{
             return false;
         }
     }
+
     @Override
     public Boolean delete(Long id){
         try {

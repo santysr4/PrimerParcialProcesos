@@ -57,22 +57,30 @@ public class ProductController {
             return new ResponseEntity<>(response,HttpStatus.NOT_FOUND);
         }
     }
-    @PostMapping(value = "/product")
-    public ResponseEntity saveProduct(@RequestHeader(value = "Authorization") String token){
-        if(!validateToken(token)){return new ResponseEntity<>("Token invalido",HttpStatus.UNAUTHORIZED);}
+    @PostMapping (value = "/product/{id}/{id_usuario}")
+    public ResponseEntity saveVehicle(@RequestHeader(value = "Authorization") String token,@PathVariable Long id,@PathVariable Long id_usuario){
+        Map<String, String> response = new HashMap<>();
 
-        Map response = new HashMap();
-        Boolean userResp = productServiceImp.createProduct();
-
-        if(userResp == true){
-            response.put("status", "201");
-            response.put("message","Se creo el Producto");
-            return new ResponseEntity(response, HttpStatus.CREATED);
+        try {
+            if(!validateToken(token))
+            {
+                return new ResponseEntity("Token invalido", HttpStatus.UNAUTHORIZED);
+            }
+            Boolean vehicleResp = productServiceImp.createProduct(id, id_usuario);
+            if(vehicleResp){
+                response.put("status","201");
+                response.put("message", "Producto creado correctamente");
+                return new ResponseEntity(response, HttpStatus.CREATED);
+            }
+            return new ResponseEntity(response, HttpStatus.BAD_REQUEST);
         }
-        response.put("status","400");
-        response.put("message","Hubo un error al crear el Producto");
-        return new ResponseEntity(response,HttpStatus.BAD_REQUEST);
+        catch (Exception e){
+            response.put("status", "400");
+            response.put("message", "error creando el producto");
+            return new ResponseEntity(response, HttpStatus.BAD_REQUEST);
+        }
     }
+
     @PutMapping(value = "/product/{id}")
 
     public ResponseEntity updateProduct(@PathVariable Long id, @RequestBody Product product,
